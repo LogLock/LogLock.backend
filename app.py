@@ -3,6 +3,7 @@ import json, urllib2, os
 
 from utils import jsonp, safe_url_for
 from models import is_safe, send_push, geocode_ip
+from cartodb_sql import location_intersects
 
 from flask.ext.mandrill import Mandrill
 
@@ -20,7 +21,8 @@ def token_push():
 @app.route("/test/ip")
 def ip_locate():
     ip = request.access_route[0]
-    return jsonify(ip=geocode_ip(ip), route=request.access_route)
+    geocode = geocode_ip(ip)
+    return jsonify(ip=geocode, route=request.access_route, location_intersects=(location_intersects(geocode['lat'], geocode['lon']) if 'lon' in geocode else False))
 
 @app.route('/')
 def hello():

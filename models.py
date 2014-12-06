@@ -17,10 +17,11 @@ def is_safe(form, mandrill):
     safety_status = choice(range(-1, 2))
     return safety_status, ip, geo, os, browser # send SMS, mail...
 
-def send_push(pushbullet_token, message):
+def send_push(pushbullet_token, message, lat=40.4086, lon=-3.6922):
     """ Sends a foo location to Pushbullet """
     pb = PushBullet(pushbullet_token)
-    pb.push_address("Login from suspicious location detected!", "40.4086, -3.6922")
+    success, push = pb.push_link("Login from suspicious location detected now!", "http://maps.google.com/maps?&z=10&q=%f,+%f&ll=%f+%f" % (lat, lon, lat, lon), "A suspicious login has appeared, try to guess who is it")
+    return success
 
 def send_mail(mandrill, to):
     mandrill.send_email(
