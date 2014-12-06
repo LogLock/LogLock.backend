@@ -22,7 +22,7 @@ def token_push():
 def ip_locate():
     ip = request.access_route[0]
     geocode = geocode_ip(ip)
-    return jsonify(ip=geocode, route=request.access_route, location_intersects=(location_intersects(geocode['lat'], geocode['lon']) if 'lon' in geocode else False))
+    return jsonify(ip=geocode, route=request.access_route, location_intersects=(location_intersects(geocode['lat'], geocode['lon']) if 'lon' in geocode.keys() else False))
 
 @app.route('/')
 def hello():
