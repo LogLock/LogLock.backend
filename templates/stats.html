@@ -171,7 +171,7 @@
             $('.big').each(function(){
                 var el = $(this);
                 var new_value = parseInt(el.html().replace('%', ''))
-                el.html(new_value+Math.round(Math.random() * 4 - Math.random() * 3)+'%');
+                el.html(new_value+Math.round(Math.random() * 3 - Math.random() * 3)+'%');
             });
         }, 1500);
     }
