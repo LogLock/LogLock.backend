@@ -18,7 +18,7 @@ def is_safe(form, ip, mandrill):
     return {
         'safety_code': safety_status, 
         'token': 'fake_token',
-        'debug': [ip, geo, os, browser]}# send SMS, mail...
+        'debug': [ip, geo, os, browser]} # send SMS, mail...
 
 def send_push(pushbullet_token, message, lat=40.4086, lon=-3.6922):
     """ Sends a foo location to Pushbullet """

@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, url_for
+from flask import Flask, jsonify, request, url_for, g
 import json, urllib2, os
 
 from utils import jsonp, safe_url_for
@@ -20,13 +20,11 @@ else:
 mandrill = Mandrill(app)
 cors = CORS(app)
 
-CLIENT_IP = None
-
 __VERSION__ = 0.1
 
 @app.before_request
 def before():
-    CLIENT_IP = request.access_route[0]
+    g.CLIENT_IP = request.access_route[0]
 
 @app.route("/test/push")
 def token_push():
@@ -35,7 +33,7 @@ def token_push():
 
 @app.route("/test/ip")
 def ip_locate():
-    ip = CLIENT_IP
+    ip = g.CLIENT_IP
     geocode = cached_geocode_ip(ip)
     return jsonify(ip=geocode, 
                    route=request.access_route, 
@@ -53,7 +51,7 @@ def hello():
 @cross_origin()
 @jsonp
 def auth():
-    return jsonify(response=is_safe(request.form, CLIENT_IP, mandrill)) # ugh
+    return jsonify(response=is_safe(request.form, g.CLIENT_IP, mandrill)) # ugh
 
 @app.route('/config')
 def config():
