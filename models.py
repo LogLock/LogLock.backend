@@ -28,9 +28,9 @@ def is_safe(form, ip, geocoded_ip, mandrill):
         longitude=longitude, os=os, mobile=mobile, browser=browser)
     result = location_intersects(float(latitude), float(longitude))
     
-    if result == 'true':
+    if result == True:
         safety_status = 1
-    elif result == 'false':
+    elif result == False:
         safety_status = -1
     else:
         safety_status = 0
