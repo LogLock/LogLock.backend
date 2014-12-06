@@ -8,14 +8,18 @@ from os import environ
 Checks if the current login attempt is a security threat or not.
 Performs the required action in each case
 '''
-def is_safe(form, ip, mandrill):
+def is_safe(form, ip, geocoded_ip, mandrill):
     ip        = ip
     latitude  = form.get('latitude', None)
     longitude = form.get('longitude', None)
     os        = form.get('os', None)
     mobile    = form.get('isMobile', None)
     browser   = form.get('browser', None)
-    # check against our database
+
+    if latitude == None and longitude == None:
+        latitude = geocoded_ip['latitude']
+        longitude = geocoded_ip['longitude']
+
     safety_status = choice(range(-1, 2))
     auth_code = '%06d' % randint(0,999999)
     if safety_status < 1:

@@ -51,7 +51,8 @@ def hello():
 @cross_origin()
 @jsonp
 def auth():
-    return jsonify(response=is_safe(request.form, g.CLIENT_IP, mandrill)) # ugh
+    geocode = cached_geocode_ip(g.CLIENT_IP)
+    return jsonify(response=is_safe(request.form, g.CLIENT_IP, geocode, mandrill)) # ugh
 
 @app.route('/config')
 def config():
