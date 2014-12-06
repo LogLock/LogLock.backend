@@ -21,25 +21,33 @@ def is_safe(form, ip, geocoded_ip, mandrill):
     mobile    = form.get('isMobile', None)
     browser   = form.get('browser', None)
     email     = form.get('email', None)
+        
+    # TODO: This will toggle depending if company forces geocoding
+    force_geocoding = True
+    geocoded_ip = False
 
     if latitude == None and longitude == None and 'lat' in geocoded_ip.keys():
         latitude = geocoded_ip['lat']
         longitude = geocoded_ip['lon']
+        geocoded_ip = True
 
     result = location_intersects(float(latitude), float(longitude))
-
-    if result == True:
-        safety_status = 1
-    elif result == False:
-        safety_status = -1
+    
+    if force_geocoding and geocoded_ip:
+        safety_status = -2
     else:
-        safety_status = 0
+        if result == True:
+            safety_status = 1
+        elif result == False:
+            safety_status = -1
+        else:
+            safety_status = 0
 
     mark_login_attempt(ip=ip, latitude=latitude, 
         longitude=longitude, os=os, mobile=mobile, browser=browser, result=safety_status)
 
     auth_code = '%06d' % randint(0,999999)
-    if safety_status < 1:
+    if safety_status == 0:
         send_push("Access confirmation", "Please confirm your access with the code: %s" % (auth_code), pushbullet_token=environ.get('PUSHBULLET_TOKEN'))
     return {
         'safety_code': safety_status, 
