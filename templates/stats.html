@@ -1,0 +1,199 @@
+<!doctype html5>
+<html>
+    <head>
+        <meta charset="utf-8">
+
+        <title>LogLock realtime status</title>
+        <link href="http://loglock.github.io/lib/lib.min.css">
+
+        <script src="http://loglock.github.io/lib/lib.min.js"></script>
+        <script src="http://benpickles.github.io/peity/jquery.peity.js"></script>
+        <script src="https://rawgit.com/jashkenas/underscore/master/underscore.js"></script>
+        <style>
+            body {
+                height: 80%;
+                padding: 20px;
+                margin: auto;
+                font-family: helvetica;
+                background-color: #f3f4f5;
+            }
+
+            .hidden {
+                display: none;
+            }
+
+            left {
+                float:left;
+                width: 35%;
+            }
+            right {
+                float:left; 
+                width: 65%;
+            }
+            .peity, .stats, table {
+                margin-left: 40px;
+                margin-top: 5px;
+            }
+
+            .title {
+                margin-left: 10px;
+                font-weight: bold;
+                font-size: 18px;
+            }
+
+            .graph, .number, .table {
+                margin-top: 20px;
+                float: left;
+                width: 100%;
+            }
+
+            .big {
+                font-size: 90px;
+            }
+
+            .logo > img {
+                width: 113px;
+            }
+
+            .tabs {
+                background-color: white;
+                float: left;
+                padding: 5px;
+                -webkit-border-top-right-radius: 3px;
+                -webkit-border-top-left-radius: 3px;
+            }
+
+            .tab {
+                text-decoration: none;
+                margin-right: 9px;
+                padding: 3px;
+                cursor: hand;
+            }
+
+            .selected {
+                font-weight: bold;
+                text-decoration: underline;
+                margin-top: 5px;
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <left>
+            <div class="logo">
+                <img src="http://loglock.github.io/img/logos/log-lock-logo-green.png">
+            </div>
+            <div class="graph">
+                <span class="title">Login attempts for company {{data.c}}<span>
+                <br>
+                <span class="updating-chart timeseries">5,3,9,6,5,9,7,3,5,2,5,3,9,6,5,9,7,5,3,9,6,5,9,7,3,5,2,5,3,9,6,5,9,7,3,5,2</span>
+            </div>
+            <div class="graph">
+                <span class="title">Suspicious login attempts<span>
+                <br>
+                <span class="updating-chart2 timeseries">1,3,2,1,2,2,3,2,1,2,3,1,2,3,1,1,1,1,2,3,1,2,3,2,1,2,3,2,4,5,2,4,1,1,2,3,2</span>
+            </div>
+            <div class="number">
+                <span class="title">Verified percentage</span>
+                <br>
+                <div class="stats"><div class="big">35%</div> (avg +20% compared to yesterday)</div>
+            </div>
+            <div class="table">
+                <span class="title">Accounts stolen by provider</span>
+                <br>
+                <table class="table table-striped table-bordered">
+                    <tr>    
+                        <td><strong>Provider</strong></td>
+                        <td><strong>%</strong></td>
+                    </tr>
+                    <tr>    
+                        <td>twitter</td>
+                        <td>20</td>
+                    </tr>
+                    <tr>    
+                        <td>CyberBank</td>
+                        <td>42</td>
+                    </tr>
+                    <tr>    
+                        <td>Tuenti</td>
+                        <td>83</td>
+                    </tr>
+                </table>
+            </div>
+        </left>
+
+        <right>
+            <div class="tabs"> 
+                <span class="tab" data-target="map1">Login attempts</span>
+                <span class="tab selected" data-target="map2">Security zones</span>
+            </div>
+
+            <iframe class="map map1 hidden" width='100%' height='100%' frameborder='0' src='http://loglock.cartodb.com/viz/011dec34-7d80-11e4-8c6c-0e018d66dc29/embed_map' allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+            <iframe class="map map2" width='100%' height='100%' frameborder='0' src='https://loglock.cartodb.com/viz/100878ba-7d97-11e4-b4dd-0e4fddd5de28/map' allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+        </right>
+    </body>
+
+    <script>
+    var chart_update = function(){
+        var updatingChart1 = $(".updating-chart").peity("line", {
+            width: 200, 
+            height: 60});
+        var updatingChart2 = $(".updating-chart2").peity("line", {
+            width: 200, 
+            height: 30});
+
+        setInterval(function() {
+            var random1 = Math.round(Math.random() * 10);
+            var values1 = updatingChart1.text().split(",");
+            values1.shift();
+            values1.push(random1);
+
+            updatingChart1
+                .text(values1.join(","))
+                .change();
+
+            var random2 = Math.round(Math.random() * 3);
+            var values2 = updatingChart2.text().split(",");
+            values2.shift();
+            values2.push(random2);
+
+            updatingChart2
+                .text(values2.join(","))
+                .change();
+
+
+        }, 500);
+    }
+
+    var stats_update = function(){
+        setInterval(function(){
+            $('.big').each(function(){
+                var el = $(this);
+                var new_value = parseInt(el.html().replace('%', ''))
+                el.html(new_value+Math.round(Math.random() * 4 - Math.random() * 3)+'%');
+            });
+        }, 1500);
+    }
+
+    var tab = function(){
+        var tabs = $('.tab');
+        tabs.each(function(){
+            var current = $(this);
+            current.on('click', function(){
+                tabs.removeClass('selected');
+                current.addClass('selected');
+                $('.map').addClass('hidden');
+                $('.'+current.attr('data-target')).removeClass('hidden');
+            });
+        });
+    }
+
+    $(document).on('ready', function(){
+        chart_update();
+        stats_update();
+        tab();
+        $.material.init();
+    });
+    </script>
+</head>

@@ -60,6 +60,14 @@ def config():
         return jsonify(data=None)
     return jsonify(status='ok')
 
+
+@app.route('/<company_name>/stats')
+def stats(company_name):
+    data = {'c': company_name}
+    if request.method == 'GET':
+        return render_template('stats.html', data=data)
+        
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
@@ -71,7 +79,8 @@ def login():
         else:
             session['logged_in'] = True
             flash('You were logged in')
-            return redirect(url_for('config'))
+            
+            return redirect(url_for('stats', company_name=request.form['client']))
         
         
     return render_template('login.html', error=error)
