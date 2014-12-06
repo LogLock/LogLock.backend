@@ -5,4 +5,5 @@ requests
 flask-mandrill
 pushbullet.py
 libmagic
+flask-cors
 #https://github.com/johnHackworth/pyCartoDb

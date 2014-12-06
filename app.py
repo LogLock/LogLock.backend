@@ -11,8 +11,11 @@ app = Flask(__name__)
 app.config.from_object('settings')
 
 mandrill = Mandrill(app)
+cors = CORS(app)
 
 CLIENT_IP = None
+
+__VERSION__ = 0.1
 
 @app.before_request
 def before():
@@ -40,6 +43,7 @@ def hello():
     return jsonify(routes=data)
 
 @app.route('/auth', methods=['POST'])
+@cross_origin()
 @jsonp
 def auth():
     return jsonify(response=is_safe(request.form, CLIENT_IP, mandrill)) # ugh
@@ -52,5 +56,4 @@ def config():
 
 app.config['DEBUG'] = os.environ.get('DEBUG', False)
 if __name__ == '__main__':
-    app.debug = True
-    app.run()
+    app.run(debug=True)
