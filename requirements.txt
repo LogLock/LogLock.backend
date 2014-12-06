@@ -5,4 +5,6 @@ requests
 flask-mandrill
 pushbullet.py
 libmagic
+Flask-Cache
+redis
 #https://github.com/johnHackworth/pyCartoDb
