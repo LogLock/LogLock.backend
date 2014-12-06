@@ -13,12 +13,12 @@ def location_intersects(lat, lon):
     return results['rows'][0]['count']
 
 def mark_login_attempt(ip, latitude, longitude, os, mobile, browser):
-    SQL = '''
-        insert into attempt(info) values('{data}')
-    '''
     args = locals()
-    query = SQL.format(data=', '.join(['%s => "%s"' %(el, args[el]) for el in args]))
-    print cl.sql(query)
+    SQL = '''
+        insert into attempt(the_geom,info) values(CDB_LatLng({lat}, {lon}), '{data}')
+    '''
+    query = SQL.format(data=', '.join(['%s => "%s"' %(el, args[el]) for el in args]), lat=latitude, lon=longitude)
+    cl.sql(query)
     return choice(range(-1, 2))
 
 def dummy_create_company(data):
