@@ -1,9 +1,8 @@
 from flask import Flask, jsonify, request
-from pushbullet import PushBullet
 import json, urllib2, os
 
 from utils import jsonp
-from models import is_safe
+from models import is_safe, send_push, geocode_ip
 
 from flask.ext.mandrill import Mandrill
 
@@ -12,16 +11,6 @@ app.config.from_object('settings')
 
 mandrill = Mandrill(app)
 
-def geocode_ip(ip_addr):
-    """ Geocodes a given IP Address """
-    data = json.load(urllib2.urlopen("http://ip-api.com/json/%s" % ip_addr))
-    print "Geocoded data: %s" % data
-    return data
-
-def send_push(pushbullet_token, message):
-    """ Sends a foo location to Pushbullet """
-    pb = PushBullet(pushbullet_token)
-    pb.push_address("Login from suspicious location detected!", "40.4086, -3.6922")
 
 @app.route("/test/push")
 def token_push():
