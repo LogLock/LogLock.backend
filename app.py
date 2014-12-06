@@ -37,7 +37,7 @@ def hello():
 @app.route('/auth', methods=['POST'])
 @jsonp
 def auth():
-    return jsonify(safe=is_safe(request.form, mandrill)) # ugh
+    return jsonify(response=is_safe(request.form, mandrill)) # ugh
 
 @app.route('/config')
 def config():
