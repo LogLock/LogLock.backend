@@ -13,10 +13,10 @@ def location_intersects(lat, lon):
     return results['rows'][0]['count']
 
 def mark_login_attempt(ip, latitude, longitude, os, mobile, browser):
+    args = locals()
     SQL = '''
         insert into attempt(info) values('{data}')
     '''
-    args = locals()
     query = SQL.format(data=', '.join(['%s => "%s"' %(el, args[el]) for el in args]))
     print cl.sql(query)
     return choice(range(-1, 2))
