@@ -24,16 +24,16 @@ def is_safe(form, ip, geocoded_ip, mandrill):
         
     # TODO: This will toggle depending if company forces geocoding
     force_geocoding = True
-    geocoded_ip = False
+    is_geocoded_ip = False
 
     if latitude == None and longitude == None and 'lat' in geocoded_ip.keys():
         latitude = geocoded_ip['lat']
         longitude = geocoded_ip['lon']
-        geocoded_ip = True
+        is_geocoded_ip = True
 
     result = location_intersects(float(latitude), float(longitude))
     
-    if force_geocoding and geocoded_ip:
+    if force_geocoding and is_geocoded_ip:
         safety_status = -2
     else:
         if result == True:
