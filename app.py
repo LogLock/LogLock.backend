@@ -24,7 +24,7 @@ def ip_locate():
     geocode = geocode_ip(ip)
     return jsonify(ip=geocode, 
                    route=request.access_route, 
-                   location_intersects=(location_intersects(geocode['lat'], geocode['lon']) if 'lon' in geocode.keys()))
+                   location_intersects=location_intersects(geocode['lat'], geocode['lon']) if 'lon' in geocode.keys() else False)
 
 @app.route('/')
 def hello():
