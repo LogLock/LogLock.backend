@@ -43,6 +43,7 @@ def config():
         return jsonify(data=None)
     return jsonify(status='ok')
 
+app.config['DEBUG'] = os.environ.get('DEBUG', False)
 if __name__ == '__main__':
     app.debug = True
     app.run()
