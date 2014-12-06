@@ -16,7 +16,7 @@ $ (sudo)? make install
 	POST /auth
 		=> application/javascript
 		=> get param: ?callback=my_tasty_callback
-		=> post params: ip, geo, os & browser 
+		=> post params: {longitude:longitude, latitude:latitude, screen: screenSize, browser: browser, browserVersion: browserVersion, mobile: isMobile, os: os, osVersion: osVersion}
 		=> my_tasty_callback({ "safe": [ 1, "123", "madrid", "mac", "chrome" ] })
 
 	GET /config
