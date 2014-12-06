@@ -10,8 +10,8 @@ $ (sudo)? make install
 
 # endpoints
 	GET  / 
-		=> text/plain
-		=> Hello world
+		=> application/json
+		=> all routes
 	
 	POST /auth
 		=> application/javascript

@@ -37,4 +37,3 @@ def geocode_ip(ip_addr):
     print "Geocoded data: %s" % data
     return data
 
-

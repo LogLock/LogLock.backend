@@ -1,7 +1,7 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, url_for
 import json, urllib2, os
 
-from utils import jsonp
+from utils import jsonp, safe_url_for
 from models import is_safe, send_push, geocode_ip
 
 from flask.ext.mandrill import Mandrill
@@ -24,7 +24,11 @@ def ip_locate():
 
 @app.route('/')
 def hello():
-    return "Hello World!"
+    data = []
+    for rule in app.url_map.iter_rules():
+        if safe_url_for(rule):
+            data.append([list(rule.methods), rule.endpoint, url_for(rule.endpoint)])
+    return jsonify(routes=data)
 
 @app.route('/auth', methods=['POST'])
 @jsonp

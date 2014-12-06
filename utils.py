@@ -5,6 +5,10 @@ Taken from:  https://gist.github.com/1094140
 from functools import wraps
 from flask import request, current_app
 
+def safe_url_for(rule):
+    defaults = rule.defaults if rule.defaults is not None else ()
+    arguments = rule.arguments if rule.arguments is not None else ()
+    return len(defaults) >= len(arguments)
 
 def jsonp(func):
     """Wraps JSONified output for JSONP requests."""
