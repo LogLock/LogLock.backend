@@ -4,6 +4,7 @@ LogLock.backend
 
 # installation
 ```bash
+$ apt-get install python-magic XOR brew install libmagic
 $ (sudo)? make install
 ```
 
