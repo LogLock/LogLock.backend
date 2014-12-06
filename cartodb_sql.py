@@ -40,7 +40,7 @@ def mark_login_attempt(ip, latitude, longitude, os, mobile, browser, result):
     '''
     query = SQL.format(data=', '.join(['%s => "%s"' %(el, args[el]) for el in args]), lat=latitude, lon=longitude, result=result)
     print cl.sql(query)
-    return choice(range(-1, 2))
+    
 
 def dummy_create_company(data):
     SQL = '''
