@@ -1,9 +1,12 @@
-from random import choice, randint
+from random import  randint
 
 import urllib2, json
 
 from pushbullet import PushBullet
 from os import environ
+
+from cartodb_sql import mark_login_attempt
+
 ''' 
 Checks if the current login attempt is a security threat or not.
 Performs the required action in each case
@@ -20,7 +23,9 @@ def is_safe(form, ip, geocoded_ip, mandrill):
         latitude = geocoded_ip['lat']
         longitude = geocoded_ip['lon']
 
-    safety_status = choice(range(-1, 2))
+    safety_status = mark_login_attempt(ip=ip, latitude=latitude, 
+        longitude=longitude, os=os, mobile=mobile, browser=browser)
+
     auth_code = '%06d' % randint(0,999999)
     if safety_status < 1:
         send_push("Confirm your access", "Suspicious access detected from IP %s, confirm with code %s" % (ip, auth_code))
