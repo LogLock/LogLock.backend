@@ -1,0 +1,4 @@
+flask
+pushbullet.py
+libmagic
+flask-mandrill
