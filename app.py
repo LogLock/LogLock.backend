@@ -30,10 +30,7 @@ def token_push():
 
 @app.route("/test/ip")
 def ip_locate():
-    if len(request.access_route) > 1:
-        ip = request.access_route[-1]
-    else:
-        ip = request.access_route[0]
+    ip = request.access_route[0]
     return jsonify(ip=geocode_ip(ip), route=request.access_route)
 
 @app.route('/')
