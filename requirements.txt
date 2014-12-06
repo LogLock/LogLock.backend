@@ -2,4 +2,5 @@ Flask
 gunicorn
 cartodb
 requests
+flask-mandrill
 #https://github.com/johnHackworth/pyCartoDb

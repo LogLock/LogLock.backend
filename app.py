@@ -1,9 +1,25 @@
 from flask import Flask
-app = Flask(__name__)
+from flask import jsonify, request
 
-@app.route("/")
+from utils import jsonp
+from models import is_safe
+
+from flask.ext.mandrill import Mandrill
+
+app = Flask(__name__)
+app.config.from_object('settings')
+
+mandrill = Mandrill(app)
+
+@app.route('/')
 def hello():
     return "Hello World!"
 
-if __name__ == "__main__":
-    app.run(port=5000)
+@app.route('/auth')
+@jsonp
+def auth():
+    return jsonify(safe=is_safe(request.form, mandrill)) # ugh
+
+
+if __name__ == '__main__':
+    app.run()
