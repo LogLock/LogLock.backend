@@ -4,13 +4,10 @@ import urllib2, json
 
 from pushbullet import PushBullet
 from os import environ
-<<<<<<< HEAD
 
 from cartodb_sql import mark_login_attempt
-
-=======
 from cartodb_sql import location_intersects
->>>>>>> dda40da33ebaf5f841be2b8f5e7eff0c458226ad
+
 ''' 
 Checks if the current login attempt is a security threat or not.
 Performs the required action in each case
@@ -27,10 +24,8 @@ def is_safe(form, ip, geocoded_ip, mandrill):
         latitude = geocoded_ip['lat']
         longitude = geocoded_ip['lon']
 
-<<<<<<< HEAD
     safety_status = mark_login_attempt(ip=ip, latitude=latitude, 
         longitude=longitude, os=os, mobile=mobile, browser=browser)
-=======
     result = location_intersects(float(latitude), float(longitude))
     
     if result == 'true':
@@ -39,7 +34,6 @@ def is_safe(form, ip, geocoded_ip, mandrill):
         safety_status = -1
     else:
         safety_status = 0
->>>>>>> dda40da33ebaf5f841be2b8f5e7eff0c458226ad
 
     auth_code = '%06d' % randint(0,999999)
     if safety_status < 1:
