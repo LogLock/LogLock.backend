@@ -24,7 +24,7 @@ def is_safe(form, ip, geocoded_ip, mandrill):
         latitude = geocoded_ip['lat']
         longitude = geocoded_ip['lon']
 
-    safety_status = mark_login_attempt(ip=ip, latitude=latitude, 
+    mark_login_attempt(ip=ip, latitude=latitude, 
         longitude=longitude, os=os, mobile=mobile, browser=browser)
     result = location_intersects(float(latitude), float(longitude))
     
