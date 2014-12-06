@@ -4,9 +4,13 @@ import urllib2, json
 
 from pushbullet import PushBullet
 from os import environ
+<<<<<<< HEAD
 
 from cartodb_sql import mark_login_attempt
 
+=======
+from cartodb_sql import location_intersects
+>>>>>>> dda40da33ebaf5f841be2b8f5e7eff0c458226ad
 ''' 
 Checks if the current login attempt is a security threat or not.
 Performs the required action in each case
@@ -19,27 +23,37 @@ def is_safe(form, ip, geocoded_ip, mandrill):
     mobile    = form.get('isMobile', None)
     browser   = form.get('browser', None)
 
-    if latitude == None and longitude == None:
+    if latitude == None and longitude == None and 'lat' in geocoded_ip.keys():
         latitude = geocoded_ip['lat']
         longitude = geocoded_ip['lon']
 
+<<<<<<< HEAD
     safety_status = mark_login_attempt(ip=ip, latitude=latitude, 
         longitude=longitude, os=os, mobile=mobile, browser=browser)
+=======
+    result = location_intersects(float(latitude), float(longitude))
+    
+    if result == 'true':
+        safety_status = 1
+    elif result == 'false':
+        safety_status = -1
+    else:
+        safety_status = 0
+>>>>>>> dda40da33ebaf5f841be2b8f5e7eff0c458226ad
 
     auth_code = '%06d' % randint(0,999999)
     if safety_status < 1:
-        send_push("Confirm your access", "Suspicious access detected from IP %s, confirm with code %s" % (ip, auth_code))
-        send_mail(mandrill, 'zen@itram.es', latitude, longitude, ip, auth_code)
+        send_push("Access confirmation", "Please confirm your access with the code: %s" % (auth_code), pushbullet_token=environ.get('PUSHBULLET_TOKEN'))
     return {
         'safety_code': safety_status, 
         'token': auth_code,
-        'debug': [ip, latitude, longitude, os, mobile, browser]
-        }# send SMS, mail...
+        }
 
-def send_push(message, body, lat=40.4086, lon=-3.6922, pushbullet_token=environ.get('PUSHBULLET_TOKEN')):
+def send_push(message, body, pushbullet_token=environ.get('PUSHBULLET_TOKEN')):
     """ Sends a foo location to Pushbullet """
+    print pushbullet_token
     pb = PushBullet(pushbullet_token)
-    success, push = pb.push_link("Login from suspicious location detected now!", "http://maps.google.com/maps?&z=10&q=%f,+%f&ll=%f+%f" % (lat, lon, lat, lon), "A suspicious login has appeared, try to guess who is it")
+    success, push = pb.push_note(message, body)
     return success
 
 def send_mail(mandrill, to, latitude, longitude, ip, safety_code):
@@ -52,8 +66,6 @@ def send_mail(mandrill, to, latitude, longitude, ip, safety_code):
         An access attempt has been logged from a suspicious location:
         <p><img src="%s" /></p>
         <p>IP address: %s</p>
-
-        Please confirm it is you with the following code: <b>%s</b>
 
         ''' %(gmaps_uri, ip, safety_code)
     )
