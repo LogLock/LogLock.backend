@@ -1,9 +1,16 @@
+from random import choice
 ''' 
 Checks if the current login attempt is a security threat or not.
 Performs the required action in each case
 '''
-def is_safe(form_data, mandrill):
-    return True # send SMS, mail...
+def is_safe(form, mandrill):
+    ip      = form.get('ip', None)
+    geo     = form.get('geo', None)
+    os      = form.get('os', None)
+    browser = form.get('browser', None)
+    # check against our database
+    safety_status = choice(range(-1, 2))
+    return safety_status, ip, geo, os, browser # send SMS, mail...
 
 
 def send_mail(mandrill, to):

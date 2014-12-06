@@ -15,11 +15,15 @@ mandrill = Mandrill(app)
 def hello():
     return "Hello World!"
 
-@app.route('/auth')
+@app.route('/auth', methods=['POST'])
 @jsonp
 def auth():
     return jsonify(safe=is_safe(request.form, mandrill)) # ugh
 
-
+@app.route('/config')
+def config():
+    if request.method == 'GET':
+        return jsonify(data=None)
+    return jsonify(status='ok')
 if __name__ == '__main__':
     app.run()
