@@ -6,4 +6,6 @@ flask-mandrill
 pushbullet.py
 libmagic
 flask-cors
+Flask-Cache
+redis
 #https://github.com/johnHackworth/pyCartoDb
