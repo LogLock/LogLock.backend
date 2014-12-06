@@ -1,0 +1,5 @@
+Flask
+gunicorn
+cartodb
+requests
+#https://github.com/johnHackworth/pyCartoDb
