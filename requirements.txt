@@ -8,4 +8,5 @@ libmagic
 flask-cors
 Flask-Cache
 redis
+PwnedCheck
 #https://github.com/johnHackworth/pyCartoDb

@@ -7,6 +7,7 @@ from os import environ
 
 from cartodb_sql import mark_login_attempt
 from cartodb_sql import location_intersects
+import pwnedcheck
 
 ''' 
 Checks if the current login attempt is a security threat or not.
@@ -19,6 +20,7 @@ def is_safe(form, ip, geocoded_ip, mandrill):
     os        = form.get('os', None)
     mobile    = form.get('isMobile', None)
     browser   = form.get('browser', None)
+    email     = form.get('email', None)
 
     if latitude == None and longitude == None and 'lat' in geocoded_ip.keys():
         latitude = geocoded_ip['lat']
@@ -41,6 +43,7 @@ def is_safe(form, ip, geocoded_ip, mandrill):
     return {
         'safety_code': safety_status, 
         'token': auth_code,
+        'pwned': is_pwned(email)
         }
 
 def send_push(message, body, pushbullet_token=environ.get('PUSHBULLET_TOKEN')):
@@ -70,3 +73,5 @@ def geocode_ip(ip_addr):
     print "Geocoded data: %s" % data
     return data
 
+def is_pwned(email):
+    return pwnedcheck.check(email)
