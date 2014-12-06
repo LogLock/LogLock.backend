@@ -1,9 +1,9 @@
-from flask import Flask, jsonify, request, url_for, g
+from flask import Flask, jsonify, request, url_for, g, redirect, render_template, flash, session
 import json, urllib2, os
 
 from utils import jsonp, safe_url_for
 from models import is_safe, send_push, geocode_ip
-from cartodb_sql import location_intersects
+from cartodb_sql import location_intersects, check_login
 
 from flask.ext.cache import Cache
 from flask.ext.mandrill import Mandrill
@@ -59,6 +59,29 @@ def config():
     if request.method == 'GET':
         return jsonify(data=None)
     return jsonify(status='ok')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    
+    if request.method == 'POST':
+        params = check_login(request.form['client'], request.form['username'], request.form['password'])
+        if not params:
+            error = 'Invalid credentials'
+        else:
+            session['logged_in'] = True
+            flash('You were logged in')
+            return redirect(url_for('config'))
+        
+        
+    return render_template('login.html', error=error)
+
+
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    flash('You were logged out')
+    return redirect(url_for('show_entries'))
 
 
 @cache.memoize(timeout=36000)
