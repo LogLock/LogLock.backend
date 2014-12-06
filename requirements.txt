@@ -3,4 +3,6 @@ gunicorn
 cartodb
 requests
 flask-mandrill
+pushbullet.py
+libmagic
 #https://github.com/johnHackworth/pyCartoDb
