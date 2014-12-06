@@ -34,7 +34,7 @@ def ip_locate():
         ip = request.access_route[-1]
     else:
         ip = request.access_route[0]
-    return jsonify(geocode_ip(ip))
+    return jsonify(ip=geocode_ip(ip), route=request.access_route)
 
 @app.route('/')
 def hello():
