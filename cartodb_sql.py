@@ -20,8 +20,8 @@ def check_login(clientname, username, password):
     
     if results['total_rows'] > 0:
         return results['rows']
-    else:
-        return None
+    
+    return None
 
 
 def location_intersects(lat, lon):
@@ -29,9 +29,9 @@ def location_intersects(lat, lon):
     print results
     if results['total_rows'] == 0:
         return None
-    else:
-        allow = results['rows'][0]['allowed']
-        return allow
+    
+    allow = results['rows'][0]['allowed']
+    return allow
 
 def mark_login_attempt(ip, latitude, longitude, os, mobile, browser, result):
     args = locals()
