@@ -12,6 +12,11 @@ app.config.from_object('settings')
 
 mandrill = Mandrill(app)
 
+CLIENT_IP = None
+
+@app.before_request
+def before():
+    CLIENT_IP = request.access_route[0]
 
 @app.route("/test/push")
 def token_push():
@@ -20,7 +25,7 @@ def token_push():
 
 @app.route("/test/ip")
 def ip_locate():
-    ip = request.access_route[0]
+    ip = CLIENT_IP
     geocode = geocode_ip(ip)
     return jsonify(ip=geocode, 
                    route=request.access_route, 
@@ -37,7 +42,7 @@ def hello():
 @app.route('/auth', methods=['POST'])
 @jsonp
 def auth():
-    return jsonify(response=is_safe(request.form, mandrill)) # ugh
+    return jsonify(response=is_safe(request.form, CLIENT_IP, mandrill)) # ugh
 
 @app.route('/config')
 def config():

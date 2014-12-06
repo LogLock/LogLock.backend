@@ -8,8 +8,8 @@ from pushbullet import PushBullet
 Checks if the current login attempt is a security threat or not.
 Performs the required action in each case
 '''
-def is_safe(form, mandrill):
-    ip      = form.get('ip', None)
+def is_safe(form, ip, mandrill):
+    ip      = ip
     geo     = form.get('geo', None)
     os      = form.get('os', None)
     browser = form.get('browser', None)
