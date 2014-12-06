@@ -17,8 +17,8 @@ def is_safe(form, ip, geocoded_ip, mandrill):
     browser   = form.get('browser', None)
 
     if latitude == None and longitude == None:
-        latitude = geocoded_ip['latitude']
-        longitude = geocoded_ip['longitude']
+        latitude = geocoded_ip['lat']
+        longitude = geocoded_ip['lon']
 
     safety_status = choice(range(-1, 2))
     auth_code = '%06d' % randint(0,999999)
