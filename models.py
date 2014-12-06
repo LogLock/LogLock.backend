@@ -17,8 +17,8 @@ def is_safe(form, ip, mandrill):
     browser   = form.get('browser', None)
     # check against our database
     safety_status = choice(range(-1, 2))
+    auth_code = '%06d' % randint(0,999999)
     if safety_status < 1:
-        auth_code = '%06d' % randint(0,999999)
         send_push("Confirm your access", "Suspicious access detected from IP %s, confirm with code %s" % (ip, auth_code))
         send_mail(mandrill, 'zen@itram.es', latitude, longitude, ip, auth_code)
     return {
