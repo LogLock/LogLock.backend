@@ -49,6 +49,7 @@ def mark_login_attempt(ip, latitude, longitude, os, mobile, browser, result):
         insert into attempt(the_geom,ip,info,result) values(CDB_LatLng({lat}, {lon}), '{ip}', '{data}',{result})
     '''
     query = SQL.format(data=', '.join(['%s => "%s"' %(el, args[el]) for el in args]), lat=latitude, lon=longitude, ip=ip, result=result)
+    print query
     print cl.sql(query)
     
 
