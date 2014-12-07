@@ -25,7 +25,7 @@ def check_login(clientname, username, password):
 
 
 def get_log(clientname):
-    q = "select st_x(a.the_geom) as lng, st_y(a.the_geom) as lat, ip, result, info->'os' as os, info->'browser' as browser from attempt a, company b where a.company_id = b.cartodb_id and b.company_name = '%s'" % clientname
+    q = "select st_x(a.the_geom) as lng, st_y(a.the_geom) as lat, ip, result, info->'os' as os, info->'browser' as browser,  a.created_at as attempt_ts from attempt a, company b where a.company_id = b.cartodb_id and b.company_name = '%s' order by attempt_ts desc" % clientname
     results = cl.sql(q)
     
     print q
