@@ -1,9 +1,10 @@
-from flask import Flask, jsonify, request, url_for, g, redirect, render_template, flash, session
+# -*- coding: utf-8 -*-
+from flask import Flask, jsonify, request, url_for, g, redirect, render_template, flash, session, Response
 import json, urllib2, os
 
 from utils import jsonp, safe_url_for
 from models import is_safe, send_push, geocode_ip
-from cartodb_sql import location_intersects, check_login
+from cartodb_sql import location_intersects, check_login, get_log
 
 from flask.ext.cache import Cache
 from flask.ext.mandrill import Mandrill
@@ -54,6 +55,16 @@ def auth():
     geocode = cached_geocode_ip(g.CLIENT_IP)
     return jsonify(response=is_safe(request.form, g.CLIENT_IP, geocode, mandrill)) # ugh
 
+
+
+@app.route('/log', methods=['GET'])
+def log():
+    log = get_log('cyberbank')
+    
+    return Response(json.dumps(log), mimetype='application/json')
+
+
+### NOT REALLY USED FROM HERE
 @app.route('/config')
 def config():
     if request.method == 'GET':
@@ -63,7 +74,9 @@ def config():
 
 @app.route('/<company_name>/stats')
 def stats(company_name):
-    data = {'c': company_name}
+    log = get_log(company_name)
+    data = {'c': company_name, 'log': log}
+    
     if request.method == 'GET':
         return render_template('stats.html', data=data)
         
@@ -71,6 +84,8 @@ def stats(company_name):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
+    
+    client_name = request.form['client']
     
     if request.method == 'POST':
         params = check_login(request.form['client'], request.form['username'], request.form['password'])
@@ -91,6 +106,8 @@ def logout():
     session.pop('logged_in', None)
     flash('You were logged out')
     return redirect(url_for('show_entries'))
+
+##### END OF REQUESTS NOT USED
 
 
 @cache.memoize(timeout=36000)

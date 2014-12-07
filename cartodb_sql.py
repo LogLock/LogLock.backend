@@ -24,6 +24,16 @@ def check_login(clientname, username, password):
     return None
 
 
+def get_log(clientname):
+    q = "select ip, result, info->'os' as os, info->'browser' as browser from attempt a, company b where a.company_id = b.cartodb_id and b.company_name = '%s'" % clientname
+    results = cl.sql(q)
+    
+    print q
+    print results['rows']
+    
+    if results['total_rows'] > 0:
+        return results['rows']
+
 def location_intersects(lat, lon):
     results = cl.sql('select allowed from bboxes where st_intersects(CDB_LatLng(%f, %f), the_geom) limit 1' %(lat,lon))
     print results
@@ -36,9 +46,9 @@ def location_intersects(lat, lon):
 def mark_login_attempt(ip, latitude, longitude, os, mobile, browser, result):
     args = locals()
     SQL = '''
-        insert into attempt(the_geom,info,result) values(CDB_LatLng({lat}, {lon}), '{data}',{result})
+        insert into attempt(the_geom,ip,info,result) values(CDB_LatLng({lat}, {lon}), '{ip}', '{data}',{result})
     '''
-    query = SQL.format(data=', '.join(['%s => "%s"' %(el, args[el]) for el in args]), lat=latitude, lon=longitude, result=result)
+    query = SQL.format(data=', '.join(['%s => "%s"' %(el, args[el]) for el in args]), lat=latitude, lon=longitude, ip=ip, result=result)
     print cl.sql(query)
     
 
